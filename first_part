@@ -1,5 +1,5 @@
 //GLOBAL CONFIG;
-var currentScene = 1;
+var currentScene = 0;
 var CurrentClient;
 var CurrentCookedDish = [0,0,0,0,0]; //The array that represents the Dish that you are currently cooking 
 var CurrentMoney =0; //Will count the money that we have 
