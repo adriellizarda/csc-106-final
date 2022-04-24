@@ -663,7 +663,9 @@ draw = function() {
             time = timeRun - endTime;
             fill(0, 0, 0);
             text(time, 5, 35);
-        } 
+        } else {
+            currentClient.x += clientSpeed*2;
+        }
         //TO DO: MEAT COOKING
         drawStove(grillStoves);
         //TO DO: Make a system that shows all of the clients on the screen 
@@ -695,8 +697,8 @@ draw = function() {
         if(currentClient.x > 450){ 
             c += 1;
             satisfaction = 0;
-            timeRun =endTime;
-        if(c < 5){
+            timeRun = endTime;
+        if(c < 6){
             timeRun+=10; 
         } else {
             timeRun+=5;
