@@ -1,11 +1,13 @@
 //GLOBAL CONFIG;
 var currentScene = 0;
-var CurrentClient;
-var CurrentCookedDish = [0,0,0,0,0]; //The array that represents the Dish that you are currently cooking 
-var CurrentMoney =0; //Will count the money that we have 
-var DishReady = false; //Wil be true when we click on the plate and it will propose the dish to the client
-var PosXDish = 290;
-var PosYDish = 230;
+var currentClient;
+var currentCookedDish = [0,0,0,0,0]; //The array that represents the Dish that you are currently cooking 
+var currentMoney =0; //Will count the money that we have 
+var dishReady = false; //Wil be true when we click on the plate and it will propose the dish to the client
+var posXDish = 290;
+var posYDish = 230;
+var clientSpeed = 1;
+var stillPlaying = true;
 
 //BITMOJI FUNCTIONS;
 var drawBitmojiLizarda = function(x, y, h){ //drawbitmoji function
@@ -139,28 +141,42 @@ var drawBitmojiBordeau = function(bitX, bitY, h){
 }; //bordeau bitmoji function
 
 //Design of the food:
-var drawUpperBred = function(x, y){
+var drawTopBread = function(x, y){
     noStroke();
-    fill(255, 204, 0);
-    arc(x, y, 59, 44, 180, 360);
-    fill(138, 107, 12);
+    fill(213, 159, 0);
+    arc(x, y, 65, 64, 190, 350);
+    ellipse(x, y+-5, 64, 14);
+    fill(213, 159, 0);
+    fill(232, 217, 177);
     ellipse(x - 18, y - 4, 4, 2);
-    ellipse(x + 7, y - 13, 4, 2);
+    ellipse(x + 7, y - 22, 4, 2);
     ellipse(x + 20, y - 6, 4, 2);
     ellipse(x - 7, y - 15 , 4, 2);
     ellipse(x + 2, y - 9, 4, 2);
 };
 
-var drawBottomBred = function(x, y){
+var drawBottomBread = function(x, y){
     noStroke();
-    fill(255, 204, 0);
-    arc(x, y, 59, 44, 0, 180);
+    fill(213, 159, 0);
+    ellipse(x, y+12, 63, 24);
+    fill(230, 193, 99);
+    ellipse(x, y+8, 63, 15);
 };
 
 var drawMeat = function(x, y){
     noStroke();
-    fill(133, 82, 5);
-    ellipse(x, y, 63, 20);
+    fill(69, 10, 12);
+    ellipse(x, y+2, 63, 20);
+    fill(166, 23, 31);
+    ellipse(x, y - 5, 63, 20);
+};
+
+var drawMeatCooking = function(x, y){
+    noStroke();
+    fill(69, 10, 12);
+    ellipse(x, y+5, 50, 50);
+    fill(166, 23, 31);
+    ellipse(x, y, 50, 50);
 };
 
 var drawSalad = function(x,y){
@@ -177,44 +193,57 @@ var drawSalad = function(x,y){
 
 var drawTomato = function(x,y){
     noStroke();
-    fill(194, 66, 66);
-    ellipse(x - 10, y, 37, 11);
-    fill(255, 0, 0);
-    ellipse(x - 10, y, 28, 7);
-    fill(194, 66, 66);
-    ellipse(x + 10, y, 37, 11);
-    fill(255, 0, 0);
-    ellipse(x + 10, y, 28, 7);
+    var drawTomatoSlice = function(x,y){
+        fill(207, 0, 55);
+        ellipse(x - 10, y, 37, 11);
+        ellipse(x - 10, y+3, 37, 11);
+        fill(237, 47, 47);
+        ellipse(x - 10, y, 28, 7);
+
+    };
+    drawTomatoSlice(x+25, y+-4);
+    drawTomatoSlice(x, y);
 };
 
 var drawCheese = function(x,y){
     noStroke();
-    fill(255, 184, 5);
-    rect(x - 37, y, 75, 6, 7);
+    fill(255, 179, 0);
+    ellipse(x,y,64,5);
+    ellipse(x,y+5,64,5);
+    rect(x - 33, y, 67, 5);
 };
 
 var drawPlate = function(x,y){
     noStroke();
-    fill(230, 220, 179);
-    ellipse(x, y, 88, 50);
-    fill(219, 209, 171);
-    ellipse(x, y, 62, 35);
+    fill(227, 217, 179);
+    ellipse(x, y, 88, 37);
+    fill(214, 203, 164);
+    ellipse(x, y, 62, 24);
 };
 
-var drawDish = function(ArrayOfElements,x,y){
-//A Dish will be represented by an array of 5 elements because there is 5 different type of food, each element on that array will be 0 or 1, if it's 1 it means that there is the element, if it's 0, it means that there is not the element. 
-//The position of the elements will be: [BottomBred && UpperBred,Meat,Saled,Tomato,Cheese]
-    var UpperBred = 0;
+//DISH FUNCTION;
+var drawDish = function(arrayOfElements,x,y){
+    var topBread = 0;
     drawPlate(x + 50,y + 70);
-    if (ArrayOfElements[0] === 1){ 
-        drawBottomBred(50 + x, 61 + y);
-        UpperBred = 1;            
-    }
-    if (ArrayOfElements[1] === 1){ drawMeat(50 + x, 62 + y);}
-    if (ArrayOfElements[2] === 1){ drawSalad(50 + x, 63 + y);}
-    if (ArrayOfElements[3] === 1){ drawTomato(50 + x, 58 + y);}
-    if (ArrayOfElements[4] === 1){ drawCheese(50 + x, 51 + y);}
-    if (UpperBred){ drawUpperBred(50 + x, 53 + y);}
+        if (arrayOfElements[0] === 1){ 
+            drawBottomBread(50 + x, 61 + y);
+            topBread = 1;
+        }
+        if (arrayOfElements[1] === 1){
+            drawMeat(50 + x, 62 + y);
+        }
+        if (arrayOfElements[2] === 1){ 
+            drawSalad(50 + x, 63 + y);
+        }
+        if (arrayOfElements[3] === 1){
+            drawTomato(50 + x, 58 + y);
+        }
+        if (arrayOfElements[4] === 1){
+            drawCheese(50 + x, 51 + y);
+        }
+        if (topBread){
+            drawTopBread(50 + x, 53 + y);
+        }
 };
 
 /* //TEST : 
@@ -229,31 +258,91 @@ drawDish([1,1,0,0,0],123,217);
 //function to draw the bar for the money
 var drawMoney = function(d){
     fill(110, 110, 110);
-    text("Money:",360,30);
+    textSize(20);
+    text(currentMoney + "$",364,5);
     rect(369,36,25,200,5);
     fill(19, 184, 4);
     rect(372,40,19,d,5);
 };
 
 
+//REACTION DESIGN DRAW FUNCTION; functions to draw reactions for correct/incorrect food
+var drawFalseFace = function(x,y,h){
+    noStroke();
+    //FACE
+        fill(214, 0, 39);
+        ellipse (x - 30*h/100, y - 20*h/100,100*h/100,100*h/100); 
+    //EYE
+        fill (10, 3, 3); 
+        ellipse (x - 52*h/100, y - 20*h/100,15*h/100,15*h/100);
+        ellipse (x - 5*h/100, y - 20*h/100,15*h/100,15*h/100);
+    //MOUTH
+        arc(x-28*h/100, y+10*h/100, 50*h/100, 32*h/100, 180, 360);
+    //EYEBROWS
+        stroke(10, 3, 3);
+        strokeWeight(8*h/100);
+        line(x - 15*h/100, y - 25*h/100, x + 5*h/100, y - 31*h/100);
+        line(x - 40*h/100, y - 25*h/100, x - 65*h/100, y - 25*h/100);
+    noStroke();
+};
+var drawTrueFace = function(x,y,h){
+    noStroke();
+    //FACE
+        fill(255, 217, 0);
+        ellipse (x - 30*h/100, y - 20*h/100,100*h/100,100*h/100); 
+    //EYE
+        fill (10, 3, 3); 
+        ellipse (x - 52*h/100, y - 20*h/100,15*h/100,15*h/100);
+        ellipse (x - 5*h/100, y - 20*h/100,15*h/100,15*h/100);
+    //MOUTH
+        arc(x-29*h/100, y+-3*h/100, 50*h/100, 32*h/100, 0, 180);
+};
+
+//FISHER-BATES SHUFFLE ALGORITHM;
+var shuffleArray = function(array) {
+    var counter = array.length; 
+    while (counter > 0) { //while there are elements in the array
+        var ind = Math.floor(Math.random() * counter); // pick a random index
+        counter--; // decrease counter by 1
+        var temp = array[counter]; //swaps last element with it
+        array[counter] = array[ind];
+        array[ind] = temp;
+    }
+}; 
+
 //CLIENTS 
-var Client = function(x, y, size, face, dish) {
+var client = function(x, y, size, face, dish) {
     this.x = x;
     this.y = y;
     this.served = false;
     this.size = size;
+    this.satisfaction = 2; // 0 no, 1 yes, 2 neutral
+    this.time = 0; //Time he waited
     this.face = face;
     this.dish = dish; 
 //A Dish will be represented by an array of 5 elements because there is 5 different type of food, each element on that array will be 0 or 1, if it's 1 it means that there is the element, if it's 0, it means that there is not the element. 
 //The position of the elements will be: [BottomBred && UpperBred,Meat,Saled,Tomato,Cheese]
 };
 
-Client.prototype.draw = function() {
+client.prototype.draw = function() {
+    //buble
     fill(255, 255, 255);
-    ellipse(this.x + 60, this.y - 40, 101, 82);
-    triangle(16 + this.x, 4 + this.y, 42 + this.x, -75 + this.y, 33 + this.x, -5 + this.y);
+    triangle(69 + this.x, 5 + this.y, 90 + this.x, -75 + this.y, 108 + this.x, -5 + this.y);
+    ellipse(this.x + 110, this.y - 47, 100, 100);
+    
+    //face
     image(this.face, this.x, this.y, this.size, this.size);
-    drawDish(this.dish, this.x + 10, this.y - 97);
+    
+    //dish
+    drawDish(this.dish, this.x + 60, this.y - 105);
+    
+    //draw of the faces when the clients is served 
+    if(currentClient.satisfaction === 1){
+        drawTrueFace(this.x+85, this.y - 70, 35);
+    }
+    else if (currentClient.satisfaction === 0){
+        drawFalseFace(this.x+85, this.y - 70, 35);
+    }
 };
 
 var faces = [
@@ -265,40 +354,66 @@ var faces = [
     getImage("avatars/mr-pants-pink"),
     getImage("avatars/mr-pants-with-hat"),
     getImage("avatars/mr-pink-orange"),
+    getImage("avatars/avatar-team"),
+    getImage("avatars/marcimus-orange"),
+    getImage("avatars/mr-pants-green"),
+    getImage("avatars/mr-pink-green"),
+    getImage("avatars/old-spice-man"),
+    getImage("avatars/aqualine-sapling"),
+    getImage("avatars/duskpin-sapling"),
+    getImage("avatars/leafers-seedling"),
+    getImage("avatars/leafers-ultimate"),
+    getImage("avatars/marcimus-purple"),
+    getImage("avatars/mr-pants-pink"),
+    getImage("avatars/mr-pants-with-hat"),
+    getImage("avatars/mr-pink-orange"),
+    getImage("avatars/avatar-team"),
+    getImage("avatars/marcimus-orange"),
+    getImage("avatars/mr-pants-green"),
+    getImage("avatars/mr-pink-green"),
+    getImage("avatars/old-spice-man")
 ];
+
+shuffleArray(faces); //shufles all clients
 
 var clients = [];
 var numberOfClient = 10;//10 is the number of clients we will have, it can evolve during the game, we will see.
 for (var i = 0; i < numberOfClient ; i++) { 
-        var X = 0;
-        var Y = 110;
-        var SIZE = 70;
-        var Face = faces.pop();
-        var dish = [];
-        for (var j = 0; j < 6; j++){
-            var element = random(0, 5);
-            if (element > 1){
-                dish.push(1);} //There is a probability of 1/5 that the element is in the sandwich
-            else { 
-                dish.push(0);}
-        } 
-        clients.push(new Client(X, Y, SIZE, Face, dish));
+    var clientX = 0;
+    var clientY = 110;
+    var clientSize = 70;
+    var face = faces.pop();
+    var dish = [];
+    for (var j = 0; j < 6; j++){
+        var element = random(0, 5);
+        if (element > 1){
+            dish.push(1);}//There is a probability of 1/5 that the element is in the sandwich
+        else { 
+            dish.push(0);}
+    } 
+    clients.push(new client(clientX, clientY, clientSize, face, dish));
 }
 
 //Function to check if the dish ordered is the samed as the dish cooked:
-var CheckDish = function(){
+var checkDish = function(){
     var answer = true ;
-    for (var l = 0; l < CurrentCookedDish.length; l++){
-        if (CurrentCookedDish[l] !== CurrentClient.dish[l]){
+    for (var l = 0; l < currentCookedDish.length; l++){
+        if (currentCookedDish[l] !== currentClient.dish[l]){
             answer = false;
         }
     }
-    CurrentClient.served = true;
+    currentClient.served = true;
+    if (answer){
+        currentClient.satisfaction = 1;
+    }
+    else {
+        currentClient.satisfaction = 0;
+    }
     return answer;
 };
 
 //BUTTON CONFIG; BORROWED W/ PERMISSION FROM KHAN ACADEMY AND MODIFIED
-var Button = function(config) {
+var button = function(config) {
     this.x = config.x || 0;
     this.y = config.y || 0;
     this.kind = config.kind || "classic";
@@ -310,7 +425,7 @@ var Button = function(config) {
     };
 };
 
-Button.prototype.draw = function() {
+button.prototype.draw = function() {
     if (this.kind === "classic") {
         fill(this.color);
         rect(this.x, this.y, this.width, this.height, 5);
@@ -321,11 +436,11 @@ Button.prototype.draw = function() {
     }
         
     if (this.kind === "UpperBred"){
-        drawUpperBred(this.x, this.y);
+        drawTopBread(this.x, this.y);
     }
     
     if (this.kind === "BottomBred"){
-        drawBottomBred(this.x, this.y);
+        drawBottomBread(this.x, this.y);
     }
     
     if (this.kind === "Meat"){
@@ -349,7 +464,7 @@ Button.prototype.draw = function() {
     }
 };
 
-Button.prototype.isMouseInside = function() {
+button.prototype.isMouseInside = function() {
     if (this.kind === "classic"){
         return mouseX > this.x &&
                mouseX < (this.x + this.width) &&
@@ -362,7 +477,7 @@ Button.prototype.isMouseInside = function() {
                mouseY > this.y - 4 &&
                mouseY < this.y + 7;
     }
-    if (this.kind === "Meat" ){
+    if (this.kind === "Meat" || this.kind === "Cheese"){
         return mouseX > this.x - 35 &&
                mouseX < this.x + 35 &&
                mouseY > this.y - 12 &&
@@ -382,14 +497,14 @@ Button.prototype.isMouseInside = function() {
     }
 };
 
-Button.prototype.handleMouseClick = function() {
+button.prototype.handleMouseClick = function() {
     if (this.isMouseInside()) {
         this.onClick();
     }
 };
 
 //start button; switches scene to frogger
-var btnStart = new Button({
+var btnStart = new button({
     x: 230,
     y: 325,
     color: (color(76, 72, 53)),
@@ -400,72 +515,72 @@ var btnStart = new Button({
 });
 
 //bred button: will add a piece of bred in a plate 
-var UpperBred = new Button({
+var upperBred = new button({
     x: 240,
-    y: 361,
+    y: 372,
     kind: "UpperBred",
     onClick: function() {
-        CurrentCookedDish[0] = 1;
+        currentCookedDish[0] = 1;
     }
 });
 
-var BottomBred = new Button({
+var bottomBred = new button({
     x: 240,
-    y: 367,
+    y: 368,
     kind: "BottomBred",
     onClick: function() {
-        CurrentCookedDish[0] = 1;
+        currentCookedDish[0] = 1;
     }
 });
 
 //meat button: will add a piece of meat on the grill
-var Meat = new Button({
+var meat = new button({
     x: 156,
-    y: 379,
+    y: 383,
     kind: "Meat",
     onClick: function() {
-         CurrentCookedDish[1] = 1;
+         currentCookedDish[1] = 1;
     }
 });
 
 //salad : will add a piece of salad in the burger 
-var Salad = new Button({
+var salad = new button({
     x: 330,
     y: 348,
     kind: "Salad",
     onClick: function() {
-         CurrentCookedDish[2] = 1;
+         currentCookedDish[2] = 1;
     }
 });
 
 //ketshup : will add some ketshup
-var Tomato = new Button({
+var tomato = new button({
     x: 330,
     y: 367,
     kind: "Tomato",
     onClick: function() {
-         CurrentCookedDish[3] = 1;
+         currentCookedDish[3] = 1;
     }
 });
 
 //mustard : will add some mustard
-var Cheese = new Button({
+var cheese = new button({
     x: 333,
-    y: 384,
+    y: 385,
     kind: "Cheese",
     onClick: function() {
-         CurrentCookedDish[4] = 1;
+         currentCookedDish[4] = 1;
     }
 });
 
-var Plate = new Button({
+var plate = new button({
     x: 340,
     y: 297,
     kind: "Plate",
     onClick: function() {
-        DishReady = true;
-        if(CheckDish()){
-            CurrentMoney += 10; //We served the correct Dish
+        dishReady = true;
+        if(checkDish()){
+            currentMoney += 10; //We served the correct Dish
         }
     }
 });
@@ -473,62 +588,55 @@ var Plate = new Button({
 //DESIGN OF THE KITCHEN 
 var drawKitchen = function(){
     noStroke();
-    
     //Sky
-    fill(98, 185, 252);
-    rect(0,0,400,153);
-    
+        fill(163, 218, 230);
+        rect(0,0,400,187);
     //floor
-    fill(245, 221, 144);
-    rect(0,99,400,153);
-    
+        fill(212, 199, 159);
+        rect(0,163,400,153);
     //hob
-    fill(89, 87, 87);
-    rect(0,189,200,150);
-    
-    fill(89, 87, 87);
-    rect(0,337,200,66);
-    
-    fill(56, 49, 49);
-    ellipse(50,226,50,50);
-    ellipse(150,226,50,50);
-    ellipse(50,300,50,50);
-    ellipse(150,300,50,50);
-    
+        fill(89, 87, 87);
+        rect(0,189,200,150);
+        fill(89, 87, 87);
+        rect(0,337,200,66);
+    //stoves
+        fill(56, 49, 49);
+        ellipse(50,226,50,50);
+        ellipse(150,226,50,50);
+        ellipse(50,300,50,50);
+        ellipse(150,300,50,50);
     //kitchen white worktop
-    fill(235, 235, 235);
-    rect(200,189,212,150);
+        fill(235, 235, 235);
+        rect(200,189,212,150);
     
-    fill(235, 235, 235);
-    rect(200,337,413,66);
-    
+        fill(235, 235, 235);
+        rect(200,337,413,66);
     //lines
-    stroke(41, 38, 41);
-    line(100,190,100,335);
-    line(0,260,198,260);
-    line(0,335,400,335);
-    
+        stroke(41, 38, 41);
+        line(100,190,100,335);
+        line(0,260,198,260);
+        line(0,335,400,335);
     //shelfs
-    noStroke();
-    fill(115, 115, 115);
-    rect(0,390,285,5);
-    rect(285,353,285,5);
-    rect(285,372,285,5);
-    rect(285,390,285,5);
-    rect(0,362,199,5);
-    
+        noStroke();
+        fill(115, 115, 115);
+        rect(0,390,285,5);
+        rect(285,353,285,5);
+        rect(285,372,285,5);
+        rect(285,390,285,5);
+        rect(0,362,199,5);
     //Buttons
-    Plate.draw();
-    Cheese.draw();
-    Tomato.draw();
-    Salad.draw();
-    Meat.draw();
-    UpperBred.draw();
-    BottomBred.draw();
-    
+        plate.draw();
+        cheese.draw();
+        tomato.draw();
+        salad.draw();
+        meat.draw();
+        bottomBred.draw();
+        upperBred.draw();
     //Draw the current dish
-    drawDish(CurrentCookedDish,PosXDish,PosYDish);
-};
+        drawDish(currentCookedDish,posXDish,posYDish);
+}; //draws kitchen game screen
+
+
 
 //MOUSECLICKED FUNCTION;
 mouseClicked = function() {
@@ -538,13 +646,13 @@ mouseClicked = function() {
     }
     else{
         //The programm react to all of the buttons of food
-        Cheese.handleMouseClick();
-        Tomato.handleMouseClick();
-        Salad.handleMouseClick();
-        Meat.handleMouseClick();
-        UpperBred.handleMouseClick();
-        BottomBred.handleMouseClick();
-        Plate.handleMouseClick();
+        cheese.handleMouseClick();
+        tomato.handleMouseClick();
+        salad.handleMouseClick();
+        meat.handleMouseClick();
+        upperBred.handleMouseClick();
+        bottomBred.handleMouseClick();
+        plate.handleMouseClick();
     }   
 }; //mouseclicked function; registers button inputs for scene
 
@@ -559,52 +667,52 @@ var splash = function(){
     noStroke();
     fill(76, 72, 53);
     textSize(20);
-    text("COOKING GAME", 15, 30);
+    text("BURGER SHOT", 15, 30);
     fill(125, 122, 109);
     textSize(15);
-    text("A restaurant game. A customer will come in and order something to their taste. As the cook, you have to provide the food for that you think will best satisfy them. If you provide the right food, they'll pay. If you don't they'll leave and you'll be without money. Try to satisfy them before time runs out.", 15, 60, 345, 120);
-}; //draws menu screen for game
+    text("A customer will come in and order something to their taste. As the cook, you have to provide the food for that you think will best satisfy them. Once you make the right food, click on it to give it to them If you don't they'll leave and you'll be without money. Try to satisfy them before time runs out.", 15, 60, 345, 120);
+}; 
 
 var c = 0; //index of a client in the table clients
 draw = function() {
     if (currentScene === 0){
         splash();
-    } else {
+    }else{
         drawKitchen();
         //TO DO: Make a system that shows all of the clients on the screen 
         if(c !== numberOfClient) { //while we didn't served all the clients
-            CurrentClient = clients[c];
-            CurrentClient.draw();
-            if(CurrentClient.x < 200){
-                CurrentClient.x += 1;
+            currentClient = clients[c];
+            currentClient.draw();
+            if(currentClient.x < 200){
+                currentClient.x += 1;
             }
             
             //Moving of the plate when we click on it
-            if (DishReady) {
-                PosYDish -= 3;
-                PosXDish -= 1;
-                if (PosYDish < 100){
-                    CurrentCookedDish = [0,0,0,0,0];
-                    DishReady = false;
-                    PosXDish = 290;
-                    PosYDish = 230;
-                    CurrentClient.served = true;
+            if (dishReady) {
+                posYDish -= 3;
+                posXDish -= 1;
+                if (posYDish < 100){
+                    currentCookedDish = [0,0,0,0,0];
+                    dishReady = false;
+                    posXDish = 290;
+                    posYDish = 230;
+                    currentClient.served = true;
                 }
             }
             
             //Moving the Client when he is served 
-            if(CurrentClient.served === true){
-                CurrentClient.x += 2;
+            if(currentClient.served === true){
+                currentClient.x += 2;
             }
             
-            if(CurrentClient.x > 450){
+            if(currentClient.x > 450){
                 c += 1;
             }
             
             //TO DO: Print the timer
             
             //Print the money
-            drawMoney(CurrentMoney);
+            drawMoney(currentMoney);
         }
     }
 };
