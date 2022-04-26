@@ -169,13 +169,36 @@ var drawBottomBread = function(x, y, h){
     fill(232, 217, 177);
     ellipse(x*h/100, y*h/100+8*h/100, 63*h/100, 13*h/100);
 };
-var drawMeat = function(x, y, h){
+
+var drawMeatNotCooked = function(x, y, h){
     noStroke();
-    fill(69, 10, 12);
+    fill(166, 7, 14);
     ellipse(x*h/100, y*h/100+2*h/100, 63*h/100, 20*h/100);
-    fill(166, 23, 31);
+    fill(207, 50, 60);
     ellipse(x*h/100, y*h/100 - 5*h/100, 63*h/100, 20*h/100);
 };
+var drawMeatCooked = function(x, y, h){
+    noStroke();
+    fill(115, 13, 18);
+    ellipse(x*h/100, y*h/100+2*h/100, 63*h/100, 20*h/100);
+    fill(163, 27, 37);
+    ellipse(x*h/100, y*h/100 - 5*h/100, 63*h/100, 20*h/100);
+};
+var drawMeatTooCooked = function(x, y, h){
+    noStroke();
+    fill(54, 14, 16);
+    ellipse(x*h/100, y*h/100+2*h/100, 63*h/100, 20*h/100);
+    fill(97, 36, 17);
+    ellipse(x*h/100, y*h/100 - 5*h/100, 63*h/100, 20*h/100);
+};
+var drawMeatNotCooked = function(x, y, h){
+    noStroke();
+    fill(166, 7, 14);
+    ellipse(x*h/100, y*h/100+2*h/100, 63*h/100, 20*h/100);
+    fill(207, 50, 60);
+    ellipse(x*h/100, y*h/100 - 5*h/100, 63*h/100, 20*h/100);
+};
+
 var drawMeatCooking = function(x, y, h){
     noStroke();
     fill(69, 10, 12);
@@ -183,6 +206,7 @@ var drawMeatCooking = function(x, y, h){
     fill(166, 23, 31);
     ellipse(x*h/100, y*h/100, 50*h/100, 50*h/100);
 };
+
 var drawSalad = function(x, y, h){
     noStroke(); 
     var drawLeaf = function(x, y, h){
@@ -239,7 +263,13 @@ var drawDish = function(arrayOfElements,x,y,h){
             topBread = 1;
         }
         if (arrayOfElements[1] === 1){
-            drawMeat(50 + x, 62 + y, h);
+            drawMeatCooked(50 + x, 62 + y, h);
+        }
+        if (arrayOfElements[1] === 2){
+            drawMeatNotCooked(50 + x, 62 + y, h);
+        }
+        if (arrayOfElements[1] === 3){
+            drawMeatTooCooked(50 + x, 62 + y, h);
         }
         if (arrayOfElements[2] === 1){ 
             drawSalad(50 + x, 63 + y, h);
@@ -444,7 +474,7 @@ button.prototype.draw = function() {
     }
 
     if (this.kind === "Meat"){
-       drawMeat(this.x, this.y, 100);
+       drawMeatNotCooked(this.x, this.y, 100);
     }
 
     if (this.kind === "Salad"){
