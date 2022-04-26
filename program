@@ -169,6 +169,7 @@ var drawBottomBread = function(x, y, h){
     fill(232, 217, 177);
     ellipse(x*h/100, y*h/100+8*h/100, 63*h/100, 13*h/100);
 };
+
 var drawMeatNotCooked = function(x, y, h){
     noStroke();
     fill(166, 7, 14);
@@ -778,5 +779,4 @@ draw = function() {
             text(currentMoney + "$",360,5);
         }
     }
-};
 };
