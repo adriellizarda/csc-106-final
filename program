@@ -1,0 +1,718 @@
+//GLOBAL CONFIG;
+var currentScene = 0;
+var currentClient;
+var currentCookedDish = [0,0,0,0,0]; //The array that represents the Dish that you are currently cooking 
+var currentMoney =0; //Will count the money that we have 
+var dishReady = false; //Wil be true when we click on the plate and it will propose the dish to the client
+var posXDish = 290;
+var posYDish = 230;
+var clientSpeed = 1;
+var stillPlaying = true;
+
+//BITMOJI FUNCTIONS;
+var drawBitmojiLizarda = function(x, y, h){ //drawbitmoji function
+    var drawBody = function(x,y,h){
+    //Body
+        noStroke();
+        fill(170, 189, 113);
+        arc(x + 100*h/100, y + 178*h/100, 124*h/100, 97*h/100, 180, 360);
+    //Shirt
+        fill(166, 165, 161);
+        rect(x + 81*h/100, y + 132*h/100, 38*h/100, 45*h/100);
+    //Neck
+        fill(219, 191, 160);
+        ellipse (x + 100*h/100, y + 137*h/100,24*h/100,21*h/100);
+    //text
+        fill(255, 255, 255);
+        textSize(20*h/100);
+        text("AL", x + 90*h/100, y + 150*h/100);
+    };
+    drawBody(x,y,h);
+    var drawFace = function(x,y,h){
+    //Head
+        noStroke();
+        fill(232, 221, 208);
+        ellipse (x + 100*h/100, y + 101*h/100,80*h/100,80*h/100);
+    //Mouth
+        stroke(54, 47, 39);
+        fill(54, 47, 39);
+        strokeWeight(1*h/100);
+        line (x+90*h/100, y+130*h/100, x+109*h/100, y+130*h/100);
+    //Glasses Bridge
+        line(x + 101*h/100, y + 110*h/100, x + 97*h/100, y + 110*h/100);
+    };
+    drawFace(x,y,h);
+    var drawGlasses = function(x,y){
+    //Glasses
+        stroke(54, 47, 39);
+        strokeWeight(3*h/100);
+        fill(232, 221, 208);
+        ellipse (x + 80*h/100, y + 110*h/100, 35*h/100, 35*h/100);//Lens
+    //Eyebrows
+        fill(54, 47, 39);
+        rect(x + 65*h/100, y + 99*h/100, 27*h/100, 1*h/100);
+    //Eyes
+        noStroke();
+        fill(54, 47, 39);
+        arc(x + 80*h/100, y + 109*h/100, 31*h/100, 10*h/100, 180, 360);//Eyelid
+        ellipse (x + 80*h/100, y + 112*h/100, 15*h/100, 15*h/100);//Eye
+    };
+    drawGlasses(x,y);
+    drawGlasses(x+40*h/100,y);
+    var drawHat = function(x,y,h){
+    //Hair
+        var drawBangs = function(x,y,h){
+            bezier(x + 90*h/100, y + 85*h/100, x + 115*h/100, y + 138*h/100, x + 120*h/100,               y+ 90*h/100, x + 115*h/100, y + 79*h/100);}; 
+            //Tuft1
+            drawBangs(x,y,h);
+            drawBangs(x-15*h/100,y-5*h/100,h);
+        bezier(x + 60*h/100, y + 90*h/100, x + 50*h/100, y + 125*h/100, x + 60*h/100, y +             110*h/100, x + 105*h/100, y + 75*h/100);//LeftTuft
+        bezier(x + 140*h/100, y + 90*h/100, x + 150*h/100, y + 125*h/100, x + 130*h/100, y            +110*h/100, x + 105*h/100, y + 75*h/100);//RightTuft
+    //Hat
+        fill(255, 84, 10);
+        arc(x + 100*h/100, y + 90*h/100, 80*h/100, 107*h/100, 180, 360);
+    };
+    drawHat(x,y,h);
+}; //lizarda bitmoji function
+var drawBitmojiHead = function(bitX, bitY, h){
+    noStroke();
+    fill(184, 104, 48);
+    rect((h / 100 * 28) + bitX ,(h / 100 * 55) + bitY ,h / 100 * 90 ,h / 100 * 95);//Hair
+    
+    fill(255, 224, 189);
+    ellipse(bitX + (h / 100 * 73) ,bitY + (h / 100 * 71) ,(h / 100 * 73) ,(h / 100 * 110));//Head
+    ellipse(bitX + (h / 100 * 35) ,bitY + (h / 100 * 71) ,(h / 100 * 5) ,(h / 100 * 20));//Hears
+    ellipse(bitX + (h / 100 * 111) ,bitY + (h / 100 * 73) ,(h / 100 * 5) ,(h / 100 * 20));//Hears
+    
+    stroke(0, 0, 0);
+    bezier((h / 100 * 77) + bitX ,(h / 100 * 89) + bitY ,(h / 100 * 94) + bitX ,(h / 100 * 111) + bitY ,(h / 100 * 62) + bitX ,(h / 100 * 104) + bitY ,(h / 100 * 76) + bitX ,(h / 100 * 103) + bitY);//noze
+    
+    noStroke();
+    fill(0, 0, 0);
+    arc(bitX + (h / 100 * 74) ,bitY + (h / 100 * 60) ,(h / 100 * 92) ,(h / 100 * 99) ,180 ,360);//Hat
+    rect(bitX + (h / 100 * 26) ,bitY + (h / 100 * 54) ,(h / 100 * 96) ,(h / 100 * 12));//Hat
+    
+    fill(139 ,69 ,19);
+    rect(bitX + (h / 100 * 45) ,bitY + (h / 100 * 69) ,(h / 100 * 22) ,(h / 100 * 3));//left eyebrow
+    rect(bitX + (h / 100 * 81) ,bitY + (h / 100 * 69) ,(h / 100 * 22) ,(h / 100 * 3));//right eyebrow
+    
+    stroke(0, 0, 0);
+    fill(255 ,255 ,255); //Eyes white part
+    ellipse(bitX + (h / 100 * 58) ,bitY + (h / 100 * 82) ,(h / 100 * 20) ,(h / 100 * 10));//left
+    ellipse(bitX + (h / 100 * 92) ,bitY + (h / 100 * 82) ,(h / 100 * 20) ,(h / 100 * 10));//right
+    
+    noStroke();
+    fill(12 ,107 ,12); //Eyes green part
+    ellipse(bitX + (h / 100 * 58) ,bitY + (h / 100 * 82) ,(h / 100 * 10) ,(h / 100 * 10));//left
+    ellipse(bitX + (h / 100 * 92) ,bitY + (h / 100 * 82) ,(h / 100 * 10) ,(h / 100 * 10));//right
+    
+    fill(0 ,0 ,0);  ////Eyes black part
+    ellipse(bitX + (h / 100 * 58) ,bitY + (h / 100 * 82) ,(h / 100 * 4) ,(h / 100 * 4));//left
+    ellipse(bitX + (h / 100 * 92) ,bitY + (h / 100 * 82) ,(h / 100 * 4) ,(h / 100 * 4));//right
+    
+    stroke(255 ,204 ,0);//earring
+    noFill();
+    arc(bitX + (h / 100 * 35) ,bitY + (h / 100 * 80) ,(h / 100 * 3) ,(h / 100 * 39) ,0 ,180);//left
+    arc(bitX + (h / 100 * 111) ,bitY + (h / 100 * 80) ,(h / 100 * 3) ,(h / 100 * 39) ,0 ,180);//right
+    
+    
+    fill(250 ,126 ,85);//mouth
+    noStroke();
+    arc(bitX + (h / 100 * 76) ,bitY + (h / 100 * 112) ,(h / 100 * 20) ,(h / 100 * 14) ,0 ,180);//lower lip
+    arc(bitX + (h / 100 * 72) ,bitY + (h / 100 * 112) ,(h / 100 * 11) ,(h / 100 * 4) ,-180 ,0);//upper left lip
+    arc(bitX + (h / 100 * 80) ,bitY + (h / 100 * 112) ,(h / 100 * 11) ,(h / 100 * 4) ,-180 ,0);//upper right lip
+};
+var drawBitmojiBody = function(bitX, bitY, h){
+    fill(245 ,10 ,10);
+    arc(bitX + (h / 100 * 74) ,bitY + (h / 100 * 157) ,(h / 100 * 118) ,(h / 100 * 62) ,180 ,360);//body
+    
+    stroke(0 ,0 ,0);
+    noFill();
+    arc(bitX + (h / 100 * 89) ,bitY + (h / 100 * 143) ,(h / 100 * 11) ,(h / 100 * 12) ,34 ,329); // C
+    line(bitX + (h / 100 * 99) ,bitY + (h / 100 * 137) ,bitX + (h / 100 * 99) ,bitY + (h / 100 * 148)); //B bar 
+    arc(bitX + (h / 100 * 103) ,bitY + (h / 100 * 140) ,(h / 100 * 11) ,(h / 100 * 7) ,223 ,491); //B up
+    arc(bitX + (h / 100 * 103) ,bitY + (h / 100 * 146) ,(h / 100 * 11) ,(h / 100 * 7) ,231 ,499); //B lower
+    strokeWeight(0);
+};
+var drawBitmojiBordeau = function(bitX, bitY, h){
+    noStroke();
+    drawBitmojiHead(bitX, bitY, h);
+    drawBitmojiBody(bitX, bitY, h);
+}; //bordeau bitmoji function
+
+//Design of the food:
+var drawTopBread = function(x, y){
+    noStroke();
+    fill(213, 159, 0);
+    arc(x, y, 65, 64, 190, 350);
+    ellipse(x, y+-5, 64, 14);
+    fill(213, 159, 0);
+    fill(232, 217, 177);
+    ellipse(x - 18, y - 4, 4, 2);
+    ellipse(x + 7, y - 22, 4, 2);
+    ellipse(x + 20, y - 6, 4, 2);
+    ellipse(x - 7, y - 15 , 4, 2);
+    ellipse(x + 2, y - 9, 4, 2);
+};
+
+var drawBottomBread = function(x, y){
+    noStroke();
+    fill(213, 159, 0);
+    ellipse(x, y+12, 63, 24);
+    fill(230, 193, 99);
+    ellipse(x, y+8, 63, 15);
+};
+
+var drawMeat = function(x, y){
+    noStroke();
+    fill(69, 10, 12);
+    ellipse(x, y+2, 63, 20);
+    fill(166, 23, 31);
+    ellipse(x, y - 5, 63, 20);
+};
+
+var drawMeatCooking = function(x, y){
+    noStroke();
+    fill(69, 10, 12);
+    ellipse(x, y+5, 50, 50);
+    fill(166, 23, 31);
+    ellipse(x, y, 50, 50);
+};
+
+var drawSalad = function(x,y){
+    noStroke();
+    fill(32, 153, 32);
+    ellipse(x, y, 75, 5);
+    arc(x - 30, y, 20, 10, 0, 180);
+    arc(x, y, 20, 10, 0, 180);
+    arc(x + 30, y, 20, 10, 0, 180);
+    arc(x - 20, y, 20, 10, 180, 360);
+    arc(x, y, 20, 10, 180, 360);
+    arc(x + 20, y, 20, 10, 180, 360);
+};
+
+var drawTomato = function(x,y){
+    noStroke();
+    var drawTomatoSlice = function(x,y){
+        fill(207, 0, 55);
+        ellipse(x - 10, y, 37, 11);
+        ellipse(x - 10, y+3, 37, 11);
+        fill(237, 47, 47);
+        ellipse(x - 10, y, 28, 7);
+
+    };
+    drawTomatoSlice(x+25, y+-4);
+    drawTomatoSlice(x, y);
+};
+
+var drawCheese = function(x,y){
+    noStroke();
+    fill(255, 179, 0);
+    ellipse(x,y,64,5);
+    ellipse(x,y+5,64,5);
+    rect(x - 33, y, 67, 5);
+};
+
+var drawPlate = function(x,y){
+    noStroke();
+    fill(227, 217, 179);
+    ellipse(x, y, 88, 37);
+    fill(214, 203, 164);
+    ellipse(x, y, 62, 24);
+};
+
+//DISH FUNCTION;
+var drawDish = function(arrayOfElements,x,y){
+    var topBread = 0;
+    drawPlate(x + 50,y + 70);
+        if (arrayOfElements[0] === 1){ 
+            drawBottomBread(50 + x, 61 + y);
+            topBread = 1;
+        }
+        if (arrayOfElements[1] === 1){
+            drawMeat(50 + x, 62 + y);
+        }
+        if (arrayOfElements[2] === 1){ 
+            drawSalad(50 + x, 63 + y);
+        }
+        if (arrayOfElements[3] === 1){
+            drawTomato(50 + x, 58 + y);
+        }
+        if (arrayOfElements[4] === 1){
+            drawCheese(50 + x, 51 + y);
+        }
+        if (topBread){
+            drawTopBread(50 + x, 53 + y);
+        }
+};
+
+/* //TEST : 
+drawDish([1,1,1,1,1],50,50);
+drawDish([1,0,1,1,1],123,50);
+drawDish([1,0,0,1,1],123,109);
+drawDish([1,0,1,1,0],123,159);
+drawDish([1,1,1,0,1],123,50);
+drawDish([1,1,0,0,0],123,217);
+*/
+
+//function to draw the bar for the money
+var drawMoney = function(d){
+    fill(110, 110, 110);
+    textSize(20);
+    text(currentMoney + "$",364,5);
+    rect(369,36,25,200,5);
+    fill(19, 184, 4);
+    rect(372,40,19,d,5);
+};
+
+
+//REACTION DESIGN DRAW FUNCTION; functions to draw reactions for correct/incorrect food
+var drawFalseFace = function(x,y,h){
+    noStroke();
+    //FACE
+        fill(214, 0, 39);
+        ellipse (x - 30*h/100, y - 20*h/100,100*h/100,100*h/100); 
+    //EYE
+        fill (10, 3, 3); 
+        ellipse (x - 52*h/100, y - 20*h/100,15*h/100,15*h/100);
+        ellipse (x - 5*h/100, y - 20*h/100,15*h/100,15*h/100);
+    //MOUTH
+        arc(x-28*h/100, y+10*h/100, 50*h/100, 32*h/100, 180, 360);
+    //EYEBROWS
+        stroke(10, 3, 3);
+        strokeWeight(8*h/100);
+        line(x - 15*h/100, y - 25*h/100, x + 5*h/100, y - 31*h/100);
+        line(x - 40*h/100, y - 25*h/100, x - 65*h/100, y - 25*h/100);
+    noStroke();
+};
+var drawTrueFace = function(x,y,h){
+    noStroke();
+    //FACE
+        fill(255, 217, 0);
+        ellipse (x - 30*h/100, y - 20*h/100,100*h/100,100*h/100); 
+    //EYE
+        fill (10, 3, 3); 
+        ellipse (x - 52*h/100, y - 20*h/100,15*h/100,15*h/100);
+        ellipse (x - 5*h/100, y - 20*h/100,15*h/100,15*h/100);
+    //MOUTH
+        arc(x-29*h/100, y+-3*h/100, 50*h/100, 32*h/100, 0, 180);
+};
+
+//FISHER-BATES SHUFFLE ALGORITHM;
+var shuffleArray = function(array) {
+    var counter = array.length; 
+    while (counter > 0) { //while there are elements in the array
+        var ind = Math.floor(Math.random() * counter); // pick a random index
+        counter--; // decrease counter by 1
+        var temp = array[counter]; //swaps last element with it
+        array[counter] = array[ind];
+        array[ind] = temp;
+    }
+}; 
+
+//CLIENTS 
+var client = function(x, y, size, face, dish) {
+    this.x = x;
+    this.y = y;
+    this.served = false;
+    this.size = size;
+    this.satisfaction = 2; // 0 no, 1 yes, 2 neutral
+    this.time = 0; //Time he waited
+    this.face = face;
+    this.dish = dish; 
+//A Dish will be represented by an array of 5 elements because there is 5 different type of food, each element on that array will be 0 or 1, if it's 1 it means that there is the element, if it's 0, it means that there is not the element. 
+//The position of the elements will be: [BottomBred && UpperBred,Meat,Saled,Tomato,Cheese]
+};
+
+client.prototype.draw = function() {
+    //buble
+    fill(255, 255, 255);
+    triangle(69 + this.x, 5 + this.y, 90 + this.x, -75 + this.y, 108 + this.x, -5 + this.y);
+    ellipse(this.x + 110, this.y - 47, 100, 100);
+    
+    //face
+    image(this.face, this.x, this.y, this.size, this.size);
+    
+    //dish
+    drawDish(this.dish, this.x + 60, this.y - 105);
+    
+    //draw of the faces when the clients is served 
+    if(currentClient.satisfaction === 1){
+        drawTrueFace(this.x+85, this.y - 70, 35);
+    }
+    else if (currentClient.satisfaction === 0){
+        drawFalseFace(this.x+85, this.y - 70, 35);
+    }
+};
+
+var faces = [
+    getImage("avatars/aqualine-sapling"),
+    getImage("avatars/duskpin-sapling"),
+    getImage("avatars/leafers-seedling"),
+    getImage("avatars/leafers-ultimate"),
+    getImage("avatars/marcimus-purple"),
+    getImage("avatars/mr-pants-pink"),
+    getImage("avatars/mr-pants-with-hat"),
+    getImage("avatars/mr-pink-orange"),
+    getImage("avatars/avatar-team"),
+    getImage("avatars/marcimus-orange"),
+    getImage("avatars/mr-pants-green"),
+    getImage("avatars/mr-pink-green"),
+    getImage("avatars/old-spice-man"),
+    getImage("avatars/aqualine-sapling"),
+    getImage("avatars/duskpin-sapling"),
+    getImage("avatars/leafers-seedling"),
+    getImage("avatars/leafers-ultimate"),
+    getImage("avatars/marcimus-purple"),
+    getImage("avatars/mr-pants-pink"),
+    getImage("avatars/mr-pants-with-hat"),
+    getImage("avatars/mr-pink-orange"),
+    getImage("avatars/avatar-team"),
+    getImage("avatars/marcimus-orange"),
+    getImage("avatars/mr-pants-green"),
+    getImage("avatars/mr-pink-green"),
+    getImage("avatars/old-spice-man")
+];
+
+shuffleArray(faces); //shufles all clients
+
+var clients = [];
+var numberOfClient = 10;//10 is the number of clients we will have, it can evolve during the game, we will see.
+for (var i = 0; i < numberOfClient ; i++) { 
+    var clientX = 0;
+    var clientY = 110;
+    var clientSize = 70;
+    var face = faces.pop();
+    var dish = [];
+    for (var j = 0; j < 6; j++){
+        var element = random(0, 5);
+        if (element > 1){
+            dish.push(1);}//There is a probability of 1/5 that the element is in the sandwich
+        else { 
+            dish.push(0);}
+    } 
+    clients.push(new client(clientX, clientY, clientSize, face, dish));
+}
+
+//Function to check if the dish ordered is the samed as the dish cooked:
+var checkDish = function(){
+    var answer = true ;
+    for (var l = 0; l < currentCookedDish.length; l++){
+        if (currentCookedDish[l] !== currentClient.dish[l]){
+            answer = false;
+        }
+    }
+    currentClient.served = true;
+    if (answer){
+        currentClient.satisfaction = 1;
+    }
+    else {
+        currentClient.satisfaction = 0;
+    }
+    return answer;
+};
+
+//BUTTON CONFIG; BORROWED W/ PERMISSION FROM KHAN ACADEMY AND MODIFIED
+var button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.kind = config.kind || "classic";
+    this.color = config.color || 0;
+    this.width = config.width || 150;
+    this.height = config.height || 50;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {
+    };
+};
+
+button.prototype.draw = function() {
+    if (this.kind === "classic") {
+        fill(this.color);
+        rect(this.x, this.y, this.width, this.height, 5);
+        fill(255, 255, 255);
+        textSize(20);
+        textAlign(LEFT, TOP);
+        text(this.label, this.x+10, this.y+this.height/4);
+    }
+        
+    if (this.kind === "UpperBred"){
+        drawTopBread(this.x, this.y);
+    }
+    
+    if (this.kind === "BottomBred"){
+        drawBottomBread(this.x, this.y);
+    }
+    
+    if (this.kind === "Meat"){
+       drawMeat(this.x, this.y);
+    }
+    
+    if (this.kind === "Salad"){
+        drawSalad(this.x, this.y);
+    }
+    
+    if (this.kind === "Tomato"){
+        drawTomato(this.x, this.y);
+    }
+    
+    if (this.kind === "Cheese"){
+        drawCheese(this.x, this.y);
+    }
+
+    if (this.kind === "Plate"){
+        drawPlate(this.x, this.y);
+    }
+};
+
+button.prototype.isMouseInside = function() {
+    if (this.kind === "classic"){
+        return mouseX > this.x &&
+               mouseX < (this.x + this.width) &&
+               mouseY > this.y &&
+               mouseY < (this.y + this.height);
+    }
+    if (this.kind === "Tomato" || this.kind === "Salad" || this.kind === "Cheese"){
+        return mouseX > this.x - 37 &&
+               mouseX < this.x + 37 &&
+               mouseY > this.y - 4 &&
+               mouseY < this.y + 7;
+    }
+    if (this.kind === "Meat" || this.kind === "Cheese"){
+        return mouseX > this.x - 35 &&
+               mouseX < this.x + 35 &&
+               mouseY > this.y - 12 &&
+               mouseY < this.y + 12;
+    }
+    if (this.kind === "UpperBred" || this.kind === "BottomBred"){
+        return mouseX > this.x - 35 &&
+               mouseX < this.x + 35 &&
+               mouseY > this.y - 50 &&
+               mouseY < this.y + 20;
+    }
+    if (this.kind === "Plate"){
+        return mouseX > this.x - 50 &&
+               mouseX < this.x + 50 &&
+               mouseY > this.y - 30 &&
+               mouseY < this.y + 30;
+    }
+};
+
+button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};
+
+//start button; switches scene to frogger
+var btnStart = new button({
+    x: 230,
+    y: 325,
+    color: (color(76, 72, 53)),
+    label: "START",
+    onClick: function() {
+        currentScene = 1;
+    }
+});
+
+//bred button: will add a piece of bred in a plate 
+var upperBred = new button({
+    x: 240,
+    y: 372,
+    kind: "UpperBred",
+    onClick: function() {
+        currentCookedDish[0] = 1;
+    }
+});
+
+var bottomBred = new button({
+    x: 240,
+    y: 368,
+    kind: "BottomBred",
+    onClick: function() {
+        currentCookedDish[0] = 1;
+    }
+});
+
+//meat button: will add a piece of meat on the grill
+var meat = new button({
+    x: 156,
+    y: 383,
+    kind: "Meat",
+    onClick: function() {
+         currentCookedDish[1] = 1;
+    }
+});
+
+//salad : will add a piece of salad in the burger 
+var salad = new button({
+    x: 330,
+    y: 348,
+    kind: "Salad",
+    onClick: function() {
+         currentCookedDish[2] = 1;
+    }
+});
+
+//ketshup : will add some ketshup
+var tomato = new button({
+    x: 330,
+    y: 367,
+    kind: "Tomato",
+    onClick: function() {
+         currentCookedDish[3] = 1;
+    }
+});
+
+//mustard : will add some mustard
+var cheese = new button({
+    x: 333,
+    y: 385,
+    kind: "Cheese",
+    onClick: function() {
+         currentCookedDish[4] = 1;
+    }
+});
+
+var plate = new button({
+    x: 340,
+    y: 297,
+    kind: "Plate",
+    onClick: function() {
+        dishReady = true;
+        if(checkDish()){
+            currentMoney += 10; //We served the correct Dish
+        }
+    }
+});
+ 
+//DESIGN OF THE KITCHEN 
+var drawKitchen = function(){
+    noStroke();
+    //Sky
+        fill(163, 218, 230);
+        rect(0,0,400,187);
+    //floor
+        fill(212, 199, 159);
+        rect(0,163,400,153);
+    //hob
+        fill(89, 87, 87);
+        rect(0,189,200,150);
+        fill(89, 87, 87);
+        rect(0,337,200,66);
+    //stoves
+        fill(56, 49, 49);
+        ellipse(50,226,50,50);
+        ellipse(150,226,50,50);
+        ellipse(50,300,50,50);
+        ellipse(150,300,50,50);
+    //kitchen white worktop
+        fill(235, 235, 235);
+        rect(200,189,212,150);
+    
+        fill(235, 235, 235);
+        rect(200,337,413,66);
+    //lines
+        stroke(41, 38, 41);
+        line(100,190,100,335);
+        line(0,260,198,260);
+        line(0,335,400,335);
+    //shelfs
+        noStroke();
+        fill(115, 115, 115);
+        rect(0,390,285,5);
+        rect(285,353,285,5);
+        rect(285,372,285,5);
+        rect(285,390,285,5);
+        rect(0,362,199,5);
+    //Buttons
+        plate.draw();
+        cheese.draw();
+        tomato.draw();
+        salad.draw();
+        meat.draw();
+        bottomBred.draw();
+        upperBred.draw();
+    //Draw the current dish
+        drawDish(currentCookedDish,posXDish,posYDish);
+}; //draws kitchen game screen
+
+
+
+//MOUSECLICKED FUNCTION;
+mouseClicked = function() {
+    if (currentScene === 0){
+        //The programm react only to the start button
+        btnStart.handleMouseClick(); 
+    }
+    else{
+        //The programm react to all of the buttons of food
+        cheese.handleMouseClick();
+        tomato.handleMouseClick();
+        salad.handleMouseClick();
+        meat.handleMouseClick();
+        upperBred.handleMouseClick();
+        bottomBred.handleMouseClick();
+        plate.handleMouseClick();
+    }   
+}; //mouseclicked function; registers button inputs for scene
+
+//MENU AND GAME SCREEN;
+var splash = function(){ 
+    background(224, 219, 204);
+    fill(182, 176, 158);
+    rect(0, 300, 402, 122);
+    btnStart.draw();
+    drawBitmojiLizarda(-20,225,100);
+    drawBitmojiBordeau(230,143,100);
+    noStroke();
+    fill(76, 72, 53);
+    textSize(20);
+    text("BURGER SHOT", 15, 30);
+    fill(125, 122, 109);
+    textSize(15);
+    text("A customer will come in and order something to their taste. As the cook, you have to provide the food for that you think will best satisfy them. Once you make the right food, click on it to give it to them If you don't they'll leave and you'll be without money. Try to satisfy them before time runs out.", 15, 60, 345, 120);
+}; 
+
+var c = 0; //index of a client in the table clients
+draw = function() {
+    if (currentScene === 0){
+        splash();
+    }else{
+        drawKitchen();
+        //TO DO: Make a system that shows all of the clients on the screen 
+        if(c !== numberOfClient) { //while we didn't served all the clients
+            currentClient = clients[c];
+            currentClient.draw();
+            if(currentClient.x < 200){
+                currentClient.x += 1;
+            }
+            
+            //Moving of the plate when we click on it
+            if (dishReady) {
+                posYDish -= 3;
+                posXDish -= 1;
+                if (posYDish < 100){
+                    currentCookedDish = [0,0,0,0,0];
+                    dishReady = false;
+                    posXDish = 290;
+                    posYDish = 230;
+                    currentClient.served = true;
+                }
+            }
+            
+            //Moving the Client when he is served 
+            if(currentClient.served === true){
+                currentClient.x += 2;
+            }
+            
+            if(currentClient.x > 450){
+                c += 1;
+            }
+            
+            //TO DO: Print the timer
+            
+            //Print the money
+            drawMoney(currentMoney);
+        }
+    }
+};
