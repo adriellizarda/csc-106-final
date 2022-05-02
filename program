@@ -1,5 +1,5 @@
 //GLOBAL CONFIG;
-var currentScene = 1;
+var currentScene = 0;
 var currentClient;
 var waitingClient;
 var currentCookedDish = [0,0,0,0,0]; //The array that represents the Dish that you are currently cooking 
@@ -11,6 +11,7 @@ var timeRunning = 10;
 var posXDish = 290;
 var posYDish = 230;
 var clientSpeed = 1;
+
 
 //BITMOJI FUNCTIONS;
 var drawBitmojiLizarda = function(x, y, h){ //drawbitmoji function
