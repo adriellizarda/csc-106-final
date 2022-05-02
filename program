@@ -1,5 +1,5 @@
 //GLOBAL CONFIG;
-var currentScene = 0;
+var currentScene = 1;
 var currentClient;
 var waitingClient;
 var currentCookedDish = [0,0,0,0,0]; //The array that represents the Dish that you are currently cooking 
