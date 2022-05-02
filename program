@@ -12,6 +12,7 @@ var posXDish = 290;
 var posYDish = 230;
 var clientSpeed = 1;
 
+
 //BITMOJI FUNCTIONS;
 var drawBitmojiLizarda = function(x, y, h){ //drawbitmoji function
     var drawBody = function(x,y,h){
