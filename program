@@ -1,7 +1,6 @@
 //GLOBAL CONFIG;
 var currentScene = 0;
 var currentClient;
-var waitingClient;
 var currentCookedDish = [0,0,0,0,0]; //The array that represents the Dish that you are currently cooking 
 var currentMoney = 0; //Will count the money that we have 
 var dishReady = false; //Wil be true when we click on the plate and it will propose the dish to the client
@@ -14,6 +13,10 @@ var clientSpeed = 1;
 var hobs = [];
 var c = 0; //index of a client in the table clients
 var StillPlaying = true;
+var clients = [];
+var numberOfClient = 5;//10 is the number of clients we will have, it can evolve during the game, we will see.
+var endTime;
+var endTimeCalculated = false;
 
 //BITMOJI FUNCTIONS;
 var drawBitmojiLizarda = function(x, y, h){ //drawbitmoji function
@@ -439,8 +442,6 @@ var faces = [
     getImage("avatars/old-spice-man")
 ];
 shuffleArray(faces); //shufles all clients
-var clients = [];
-var numberOfClient = 25;//10 is the number of clients we will have, it can evolve during the game, we will see.
 
 var createClients = function(){
     for (var i = 0; i < numberOfClient ; i++) { 
@@ -627,8 +628,8 @@ var meat = new button({
 
 //salad : will add a piece of salad in the plate 
 var salad = new button({
-    x: 330,
-    y: 348,
+    x: 342,
+    y: 387,
     kind: "Salad",
     onClick: function() {
         if (currentCookedDish[2] === 0){
@@ -641,7 +642,7 @@ var salad = new button({
 
 //tomato : will add some tomatoes
 var tomato = new button({
-    x: 330,
+    x: 342,
     y: 367,
     kind: "Tomato",
     onClick: function() {
@@ -655,8 +656,8 @@ var tomato = new button({
 
 //cheese : will add some cheese
 var cheese = new button({
-    x: 333,
-    y: 385,
+    x: 342,
+    y: 346,
     kind: "Cheese",
     onClick: function() {
          if (currentCookedDish[4] === 0){
@@ -768,6 +769,7 @@ var hob4 = new hob({
     onClick: function() {
         currentCookedDish[1] = this.CookingLevel;
         this.CookingLevel = 0;
+        this.timer = 0;
     }
 });
 
@@ -840,7 +842,21 @@ var splash = function(){
     text("DO 200$ IF YOU WANT TO WIN !", 15, 192);
 }; 
 
+var calculateNumberOfFail = function(){
+    var numberOfFail = 0;
+    for (var p = 0; p < numberOfClient ; p++){
+        if (clients[p].satisfaction === 0){
+        }numberOfFail += 1;
+    }
+    return numberOfFail;
+};
+
 var end = function(){ 
+    //calculate the end time (only once)
+    if(endTimeCalculated === false){ 
+        endTime = round((millis()-startTime)/1000) ;
+        endTimeCalculated = true;
+    }
     background(224, 219, 204);
     fill(182, 176, 158);
     rect(0, 300, 402, 122);
@@ -851,9 +867,16 @@ var end = function(){
     textSize(20);
     text("END OF THE GAME !", 130, 30);
     text("YOU WON 200 $", 130, 60);
+    text("Number of fail: " + calculateNumberOfFail(), 50, 170);
+    text("Time: " + endTime + " seconds", 50, 200);
 }; 
 
 var lostScreen = function(){ 
+    //calculate the end time (only once)
+    if(endTimeCalculated === false){ 
+        endTime = round((millis()-startTime)/1000) ;
+        endTimeCalculated = true;
+    }
     background(224, 219, 204);
     fill(182, 176, 158);
     rect(0, 300, 402, 122);
@@ -865,6 +888,8 @@ var lostScreen = function(){
     text("END OF THE GAME !", 130, 30);
     textSize(17);
     text("YOU LOST BECAUSE YOU DIDN'T MANAGE TO DO 200$ WITH ALL OF YOUR CLIENTS", 15, 60, 345, 120);
+    text("Number of fail: " + calculateNumberOfFail(), 50, 170);
+    text("Time: " + endTime + " seconds", 50, 200);
 }; 
 
 
@@ -914,6 +939,7 @@ draw = function() {
                         currentClient.served = true;
                     }
                 }
+                
                 //Moving the Client when he is served
                 if(currentClient.served === true){
                     currentClient.x += clientSpeed*3;
@@ -922,6 +948,7 @@ draw = function() {
                     currentClient.x += clientSpeed*3;
                     currentClient.satisfaction = 0;
                 }
+                
                 if(currentClient.x > 450){
                     c += 1;
                     currentClient.satisfaction = 2;
@@ -933,12 +960,13 @@ draw = function() {
                         timeRunning += 6;
                     }
                 }
-                //Timer
+                
+                //Timer of the Client
                 time = timeRunning - (round((millis() - startTime)/1000));
                 if(currentClient.x <= 200){
                     fill(0, 0, 0);
                     text(time, 5, 5);
-                    }
+                }
                 currentClient.draw();
                 
                 //Print the money
@@ -971,3 +999,4 @@ draw = function() {
         }
     }
 };
+
