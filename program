@@ -13,6 +13,7 @@ var posYDish = 230;
 var clientSpeed = 1;
 var hobs = [];
 var c = 0; //index of a client in the table clients
+var StillPlaying = true;
 
 //BITMOJI FUNCTIONS;
 var drawBitmojiLizarda = function(x, y, h){ //drawbitmoji function
@@ -312,6 +313,20 @@ var drawMoney = function(d){
     rect(369,36,25,200,5);
     fill(19, 184, 4);
     rect(372,40,19,d,5);
+};
+
+//Function to draw a timer with a time t
+var drawTimer = function(x,y,t){
+    if(t < 6){
+        fill(255, 183, 0);
+    }
+    if(t >= 6 && t < 12){
+        fill(39, 214, 4);
+    }
+    if(t >= 12){
+        fill(255, 0, 0);
+    }
+    arc(x,y,15,15,0,30*t);
 };
 
 //Function to draw the timer  on the hobs
@@ -678,18 +693,29 @@ var hob = function(config) {
 hob.prototype.draw = function() {
     fill(56, 49, 49);
     ellipse(this.x, this.y, 50, 50);
+    
+    //Meat not cooked
     if (this.CookingLevel === 1){
         drawMeatCooking1(this.x + 5, this.y + 0, 97);
-        text(round((millis()-this.timer)/1000),this.x + 5, this.y + 5, 50, 50);
+        //text(round((millis()-this.timer)/1000),this.x + 5, this.y + 5, 50, 50);
     }
+    
+    //Meat cooked
     if (this.CookingLevel === 2){
         drawMeatCooking2(this.x + 5, this.y, 97);
-        text(round((millis()-this.timer)/1000),this.x + 5,this.y + 5, 50, 50);
+        //text(round((millis()-this.timer)/1000),this.x + 5,this.y + 5, 50, 50);
     }
+    
+    //Meat too cooked
     if (this.CookingLevel === 3){
         drawMeatCooking3(this.x + 5, this.y, 97);
-        text(round((millis()-this.timer)/1000),this.x + 5, this.y + 5, 50, 50);
+        //text(round((millis()-this.timer)/1000),this.x + 5, this.y + 5, 50, 50);
     }
+    
+    if(this.timer !== 0){
+        drawTimer(this.x + 20, this.y + 20, round((millis()-this.timer)/1000));
+    }
+    
 };
 
 hob.prototype.isMouseInside = function() {
@@ -813,6 +839,20 @@ var splash = function(){
     text("A customer will come in and order something to their taste. As the cook, you have to provide the food for that you think will best satisfy them. Once you make the right food, click on it to give it to them If you don't they'll leave and you'll be without money. Try to satisfy them before time runs out.", 15, 60, 345, 120);
 }; 
 
+var end = function(){ 
+    background(224, 219, 204);
+    fill(182, 176, 158);
+    rect(0, 300, 402, 122);
+    drawBitmojiLizarda(-20,225,100);
+    drawBitmojiBordeau(230,165,86);
+    noStroke();
+    fill(76, 72, 53);
+    textSize(20);
+    text("END OF THE GAME !", 130, 30);
+    text("YOU WON 200 $", 130, 60);
+}; 
+
+
 //MOUSECLICKED FUNCTION;
 mouseClicked = function() {
     if (currentScene === 0){
@@ -839,69 +879,79 @@ draw = function() {
     if (currentScene === 0){
         splash();
     }else{
-        drawKitchen();
-            if(c !== numberOfClient) { //while we didn't served all the clients
-                currentClient = clients[c];
-                currentClient.bubbleSize = 100;
-            if(currentClient.x < 200){
-                currentClient.x += 1;
-            }
-            //Moving of the plate when we click on it
-            if (dishReady) {
-                posYDish -= 3;
-                posXDish -= 1;
-                if (posYDish < 100){
-                    currentCookedDish = [0,0,0,0,0];
-                    dishReady = false;
-                    posXDish = 290;
-                    posYDish = 230;
-                    currentClient.served = true;
+        if (StillPlaying) {
+            drawKitchen();
+                if(c !== numberOfClient) { //while we didn't served all the clients
+                    currentClient = clients[c];
+                    currentClient.bubbleSize = 100;
+                if(currentClient.x < 200){
+                    currentClient.x += 1;
                 }
-            }
-            //Moving the Client when he is served
-            if(currentClient.served === true){
-                currentClient.x += clientSpeed*3;
-                currentClient.bubbleX = currentClient.x;
-            } else if (time < 1){
-                currentClient.x += clientSpeed*3;
-                currentClient.satisfaction = 0;
-            }
-            if(currentClient.x > 450){
-                c += 1;
-                currentClient.satisfaction = 2;
-                //resets timer after current client passes
-                timeRunning = (round((millis() - startTime)/1000));
-                if(c < 15){ 
-                    timeRunning += 10;
-                } else {
-                    timeRunning += 6;
+                //Moving of the plate when we click on it
+                if (dishReady) {
+                    posYDish -= 3;
+                    posXDish -= 1;
+                    if (posYDish < 100){
+                        currentCookedDish = [0,0,0,0,0];
+                        dishReady = false;
+                        posXDish = 290;
+                        posYDish = 230;
+                        currentClient.served = true;
+                    }
                 }
-            }
-            //Timer
-            time = timeRunning - (round((millis() - startTime)/1000));
-            if(currentClient.x <= 200){
+                //Moving the Client when he is served
+                if(currentClient.served === true){
+                    currentClient.x += clientSpeed*3;
+                    currentClient.bubbleX = currentClient.x;
+                } else if (time < 1){
+                    currentClient.x += clientSpeed*3;
+                    currentClient.satisfaction = 0;
+                }
+                if(currentClient.x > 450){
+                    c += 1;
+                    currentClient.satisfaction = 2;
+                    //resets timer after current client passes
+                    timeRunning = (round((millis() - startTime)/1000));
+                    if(c < 15){ 
+                        timeRunning += 10;
+                    } else {
+                        timeRunning += 6;
+                    }
+                }
+                //Timer
+                time = timeRunning - (round((millis() - startTime)/1000));
+                if(currentClient.x <= 200){
+                    fill(0, 0, 0);
+                    text(time, 5, 5);
+                    }
+                currentClient.draw();
+                
+                //Print the money
+                drawMoney(currentMoney);
+                textSize(25);
                 fill(0, 0, 0);
-                text(time, 5, 5);
-                }
-            currentClient.draw();
-            
-            //Print the money
-            drawMoney(currentMoney);
-            textSize(25);
-            fill(0, 0, 0);
-            text(currentMoney + "$",360,5);
-            
-            //Timer of the hobs 
-            for (var n = 0; n < 4; n++){
-                if( hobs[n].timer !== 0 ){
-                    if( round((millis()-hobs[n].timer)/1000) > 5){
-                        hobs[n].CookingLevel = 2;
-                    }
-                     if( round((millis()-hobs[n].timer)/1000) > 15){
-                        hobs[n].CookingLevel = 3;
+                text(currentMoney + "$",360,5);
+                
+                //Timer of the hobs 
+                for (var n = 0; n < 4; n++){
+                    if( hobs[n].timer !== 0 ){
+                        if( round((millis()-hobs[n].timer)/1000) > 5){
+                            hobs[n].CookingLevel = 2;
+                        }
+                         if( round((millis()-hobs[n].timer)/1000) >= 12){
+                            hobs[n].CookingLevel = 3;
+                        }
                     }
                 }
             }
+            
+            if(currentMoney === 200){
+                StillPlaying = false;
+            }
+        }
+        else {
+            end();
         }
     }
 };
+
