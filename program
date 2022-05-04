@@ -187,17 +187,17 @@ var drawMeatCooking1 = function(x, y, h){
 
 var drawMeatCooking2 = function(x, y, h){
     noStroke();
-    fill(115, 13, 18);
+    fill(89, 50, 19);
     ellipse(x*h/100, y*h/100+5*h/100, 50*h/100, 50*h/100);
-    fill(163, 27, 37);
+    fill(125, 50, 27);
     ellipse(x*h/100, y*h/100, 50*h/100, 50*h/100);
 };
 
 var drawMeatCooking3 = function(x, y, h){
     noStroke();
-    fill(54, 14, 16);
+    fill(5, 0, 0);
     ellipse(x*h/100, y*h/100+5*h/100, 50*h/100, 50*h/100);
-    fill(105, 45, 26);
+    fill(61, 20, 8);
     ellipse(x*h/100, y*h/100, 50*h/100, 50*h/100);
 };
 
@@ -211,17 +211,17 @@ var drawMeatNotCooked = function(x, y, h){
 
 var drawMeatCooked = function(x, y, h){
     noStroke();
-    fill(115, 13, 18);
+    fill(89, 50, 19);
     ellipse(x*h/100, y*h/100+2*h/100, 63*h/100, 20*h/100);
-    fill(163, 27, 37);
+    fill(125, 50, 27);
     ellipse(x*h/100, y*h/100 - 5*h/100, 63*h/100, 20*h/100);
 };
 
 var drawMeatTooCooked = function(x, y, h){
     noStroke();
-    fill(54, 14, 16);
+    fill(5, 0, 0);
     ellipse(x*h/100, y*h/100+2*h/100, 63*h/100, 20*h/100);
-    fill(97, 36, 17);
+    fill(61, 20, 8);
     ellipse(x*h/100, y*h/100 - 5*h/100, 63*h/100, 20*h/100);
 };
 
@@ -285,10 +285,10 @@ var drawDish = function(arrayOfElements,x,y,h){
             topBread = 1;
         }
         if (arrayOfElements[1] === 1){
-            drawMeatCooked(50 + x, 62 + y, h);
+            drawMeatNotCooked(50 + x, 62 + y, h);
         }
         if (arrayOfElements[1] === 2){
-            drawMeatNotCooked(50 + x, 62 + y, h);
+            drawMeatCooked(50 + x, 62 + y, h);
         }
         if (arrayOfElements[1] === 3){
             drawMeatTooCooked(50 + x, 62 + y, h);
@@ -837,6 +837,7 @@ var splash = function(){
     fill(125, 122, 109);
     textSize(15);
     text("A customer will come in and order something to their taste. As the cook, you have to provide the food for that you think will best satisfy them. Once you make the right food, click on it to give it to them If you don't they'll leave and you'll be without money. Try to satisfy them before time runs out.", 15, 60, 345, 120);
+    text("DO 200$ IF YOU WANT TO WIN !", 15, 192);
 }; 
 
 var end = function(){ 
@@ -850,6 +851,20 @@ var end = function(){
     textSize(20);
     text("END OF THE GAME !", 130, 30);
     text("YOU WON 200 $", 130, 60);
+}; 
+
+var lostScreen = function(){ 
+    background(224, 219, 204);
+    fill(182, 176, 158);
+    rect(0, 300, 402, 122);
+    drawBitmojiLizarda(-20,225,100);
+    drawBitmojiBordeau(230,165,86);
+    noStroke();
+    fill(76, 72, 53);
+    textSize(20);
+    text("END OF THE GAME !", 130, 30);
+    textSize(17);
+    text("YOU LOST BECAUSE YOU DIDN'T MANAGE TO DO 200$ WITH ALL OF YOUR CLIENTS", 15, 60, 345, 120);
 }; 
 
 
@@ -881,10 +896,10 @@ draw = function() {
     }else{
         if (StillPlaying) {
             drawKitchen();
-                if(c !== numberOfClient) { //while we didn't served all the clients
-                    currentClient = clients[c];
-                    currentClient.bubbleSize = 100;
-                if(currentClient.x < 200){
+            if(c !== numberOfClient) { //while we didn't served all the clients
+                currentClient = clients[c];
+                currentClient.bubbleSize = 100;
+                if(currentClient.x < 200){ 
                     currentClient.x += 1;
                 }
                 //Moving of the plate when we click on it
@@ -943,10 +958,12 @@ draw = function() {
                         }
                     }
                 }
-            }
-            
-            if(currentMoney === 200){
-                StillPlaying = false;
+                
+                if(currentMoney === 200){
+                    StillPlaying = false;
+                }
+            }else{
+                lostScreen();
             }
         }
         else {
@@ -954,4 +971,3 @@ draw = function() {
         }
     }
 };
-
