@@ -214,6 +214,140 @@ var drawPlate = function(x, y, h){
     ellipse(x*h/100, y*h/100+8*h/100, 62*h/100, 8*h/100);
 };
 
+//SPLASH SCREEN DRAW FUNCTIONS;
+var checkerBoard = function(x, y){
+    var redTile = function(x, y, w, h){
+        fill(156, 0, 2);    
+        rect(x, y, w, h);    
+    };
+    var yellowTile = function(x, y, w, h){
+        fill(252, 248, 211);    
+        rect(x, y, w, h);    
+    };
+    var tileBoard = function(x, y, w, h){
+        redTile(x + 25, y + 25, 25, 25);
+        yellowTile(x + 50, y + 25, 25, 25);
+        redTile(x + 50, y + 50, 25, 25);
+        yellowTile(x + 25, y + 50, 25, 25);
+    };
+    var tileRow = function(x, y){
+    noStroke();
+    tileBoard(x + -25, y + -25, 100, 100);
+    tileBoard(x + -25, y + 25, 100, 100);
+    tileBoard(x + -25, y + 75, 100, 100);
+    tileBoard(x + -25, y + 125, 100, 100);
+    tileBoard(x + -25, y + 175, 100, 100);
+    tileBoard(x + -25, y + 225, 100, 100);
+    tileBoard(x + -25, y + 275, 100, 100);
+    tileBoard(x + -25, y + 325, 100, 100);
+    };
+    tileRow(x + 0, y + 0);
+    tileRow(x + 50, y + 0);
+    tileRow(x + 100, y + 0);
+    tileRow(x + 150, y + 0);
+    tileRow(x + 200, y + 0);
+    tileRow(x + 250, y + 0);
+    tileRow(x + 300, y + 0);
+    tileRow(x + 350, y + 0);
+};
+var drawLogo = function(x, y){
+    var drawRedBurger = function(x,y,h){
+    var drawTopBread = function(x,y,h){
+    noStroke();
+    //BREAD
+        fill(252, 248, 211);
+        arc(x*h/100, y*h/100 - 2*h/100, 65*h/100, 65*h/100, 190, 350); 
+        ellipse(x*h/100, y*h/100 - 5*h/100, 64*h/100, 14*h/100);
+        fill(252, 248, 211);
+    //SESAME SEED
+    var drawSesameSeed = function(x,y,h){
+        fill(252, 248, 211);
+        ellipse(x, y, 4, 2);
+    };
+    drawSesameSeed(x*h/100 - 18*h/100, y*h/100 - 4*h/100, 100*h/100);
+    drawSesameSeed(x*h/100 + 7*h/100, y*h/100 - 22*h/100, 100*h/100);
+    drawSesameSeed(x*h/100 + 20*h/100, y*h/100 - 6*h/100, 100*h/100);
+    drawSesameSeed(x*h/100 - 7*h/100, y*h/100 - 15*h/100, 100*h/100);
+    drawSesameSeed(x*h/100 + 2*h/100, y*h/100 - 9*h/100, 100*h/100);
+};
+    var drawBottomBread = function(x, y, h){
+    noStroke();
+    fill(252, 248, 211);
+    ellipse(x*h/100, y*h/100+12*h/100, 63*h/100, 20*h/100);
+    fill(252, 248, 211);
+    ellipse(x*h/100, y*h/100+8*h/100, 63*h/100, 13*h/100);
+};
+    var drawMeat = function(x, y, h){
+    noStroke();
+    fill(252, 248, 211);
+    ellipse(x*h/100, y*h/100+2*h/100, 63*h/100, 20*h/100);
+    fill(166, 23, 31);
+    ellipse(x*h/100, y*h/100 - 5*h/100, 63*h/100, 20*h/100);
+};
+    var drawSalad = function(x, y, h){
+    noStroke(); 
+    var drawLeaf = function(x, y, h){
+        fill(252, 248, 211);
+        ellipse(x*h/100, y*h/100, 75*h/100, 5*h/100);
+        arc(x*h/100 - 30*h/100, y*h/100, 20*h/100, 10*h/100, 0, 180);
+        arc(x*h/100, y*h/100, 20*h/100, 10*h/100, 0, 180);
+        arc(x*h/100 + 30*h/100, y*h/100, 20*h/100, 10*h/100, 0, 180);
+        arc(x*h/100 - 20*h/100, y*h/100, 20*h/100, 10*h/100, 180, 360);
+        arc(x*h/100, y*h/100, 20*h/100, 10*h/100, 180, 360);
+        arc(x*h/100 + 20*h/100, y*h/100, 20*h/100, 10*h/100, 180, 360);
+    };
+    drawLeaf(x, y - 2, h);
+};
+    var drawTomato = function(x, y, h){
+    noStroke(); 
+    var drawTomatoSlice = function(x, y){
+        fill(252, 248, 211);
+        ellipse(x*h/100 - 10*h/100, y*h/100, 37*h/100, 11*h/100);
+        ellipse(x*h/100 - 10*h/100, y*h/100 + 3*h/100, 37*h/100, 11*h/100);
+        fill(252, 248, 211);
+        ellipse(x*h/100 - 10*h/100, y*h/100, 28*h/100, 7*h/100);
+
+    };
+    drawTomatoSlice(x + 28, y - 2, h);
+    drawTomatoSlice(x - 3, y, h);
+};
+    var drawCheese = function(x, y, h){
+    noStroke();
+    fill(252, 248, 211);
+    ellipse(x*h/100,y*h/100,64*h/100,5*h/100);
+    ellipse(x*h/100,y*h/100+5*h/100,64*h/100,5*h/100);
+    rect(x*h/100 - 33*h/100, y*h/100, 64*h/100, 5*h/100);
+};
+    var drawPlate = function(x, y, h){
+    noStroke();
+    fill(252, 248, 211);
+    ellipse(x*h/100, y*h/100+10*h/100, 82*h/100, 15*h/100);
+    fill(252, 248, 211);
+    ellipse(x*h/100, y*h/100+8*h/100, 62*h/100, 8*h/100);
+};
+    var speechBubble = function(x, y, h){
+    fill(156, 0, 2);
+    triangle(x*h/100 + 69*h/100, y*h/100 + 5*h/100, x*h/100 + 90*h/100, y*h/100 - 75*h/100, x*h/100 + 108*h/100, y*h/100 - 5*h/100);
+    ellipse(x*h/100 + 110*h/100, y*h/100 - 47*h/100, 100*h/100, 100*h/100);
+};
+    speechBubble(x-164, y+30, h+10*h/100);
+    drawPlate(x, y+10, h);
+    drawBottomBread(x, y, h);
+    drawMeat(x, y, h);
+    drawTomato(x-2, y-2, h);
+    drawSalad(x, y, h);
+    drawCheese(x+1, y-11, h);
+    drawTopBread(x, y-7, h);
+};
+    fill(252, 248, 211);    
+    textSize(40);
+    fill(156, 0, 2);    
+    text("BURGER", x+35, y-10);
+    text("SHOT", x+125, y+25);
+    drawRedBurger(x + 517, y + 77, 60); 
+
+};
+
 //MEAT DESIGN
 var drawMeatCooking1 = function(x, y, h){
     noStroke();
@@ -560,9 +694,9 @@ button.prototype.handleMouseClick = function() {
 
 //start button; switches scene
 var btnStart = new button({
-    x: 230,
-    y: 325,
-    color: (color(76, 72, 53)),
+    x: 240,
+    y: 290,
+    color: (color(156, 0, 2)),
     label: "START",
     onClick: function() {
         currentScene = 1;
@@ -752,20 +886,22 @@ var hob4 = new hob({
 hobs = [hob1, hob2, hob3, hob4]; //Array with all the hobs
 
 //MENU AND GAME SCREEN;
-var splash = function(){ 
-    background(224, 219, 204);
-    fill(182, 176, 158);
-    rect(0, 300, 402, 122);
+var drawSplash = function(){
+    checkerBoard(0, 0);
+    fill(252, 248, 211);    
+    rect(97, 25, 326, 340);
+    fill(156, 0, 2);    
+    rect(0, 350, 402, 122);
     btnStart.draw();
-    drawBitmojiLizarda(-20,225,100);
-    drawBitmojiBordeau(230,165,86);
+    drawBitmojiLizarda(-28,217,75);
+    drawBitmojiBordeau(100,283,75);
     noStroke();
-    fill(76, 72, 53);
-    textSize(20);
-    text("BURGER SHOT", 15, 30);
-    fill(125, 122, 109);
-    textSize(15);
-    text("A customer will come in and order something to their taste. As the cook, you have to provide the food for that you think will best satisfy them. Once you make the right food, click on it to give it to them If you don't they'll leave and you'll be without money. Try to satisfy them before time runs out.", 15, 60, 345, 120);
+    drawLogo(70, 45);
+    textSize(14);
+    fill(156, 0, 2);
+    text("You're a frycook at a new fast food joint. A line of customers is at the doors and hungry.", 110, 115, 285, 190);
+    text("Click on an ingredient once to add it to the plate, twice to remove it. Click on the plate to serve. If they're satisfied by the food and by your time, they'll pay. Remember that it takes five seconds to cook a burger--any less and it'll come out raw and any more and it'll burn. Try to make as much money as possible!", 110, 156, 284, 190);
+
 }; 
 var drawKitchen = function(){
     noStroke();
@@ -814,17 +950,20 @@ var drawKitchen = function(){
     //Draw the current dish
         drawDish(currentCookedDish,posXDish,posYDish, 100);
 }; //draws kitchen game screen
-var end = function(){ 
-    background(224, 219, 204);
-    fill(182, 176, 158);
-    rect(0, 300, 402, 122);
-    drawBitmojiLizarda(-20,225,100);
-    drawBitmojiBordeau(230,165,86);
+var drawEnd = function(){ 
+    checkerBoard(0, 0);
+    fill(252, 248, 211);    
+    rect(97, 25, 326, 340);
+    fill(156, 0, 2);    
+    rect(0, 350, 402, 122);
+    drawBitmojiLizarda(-28,217,75);
+    drawBitmojiBordeau(100,283,75);
     noStroke();
-    fill(76, 72, 53);
+    textSize(30);
+    fill(156, 0, 2);
+    text("GAME OVER!", 105, 65);
     textSize(20);
-    text("END OF THE GAME!", 130, 30);
-    text("YOU WON" + currentMoney + " $", 130, 60);
+    text("You made " + currentMoney + "$!", 109, 95);
 }; 
 
 //MOUSECLICKED FUNCTION;
@@ -852,7 +991,7 @@ mouseClicked = function() {
 //GAME DRAW FUNCTION
 draw = function() {
     if (currentScene === 0){
-        splash();
+        drawSplash();
     }else{
         if (StillPlaying) {
             drawKitchen();
@@ -925,8 +1064,7 @@ draw = function() {
             }
         }
         else {
-            end();
+            drawEnd();
         }
     }
 };
-
