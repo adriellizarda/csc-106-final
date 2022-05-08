@@ -988,7 +988,7 @@ var drawSplash = function(){
     textSize(14);
     fill(156, 0, 2);
     text("You're a frycook at a new fast food joint. A line of customers is at the doors and hungry.", 110, 115, 285, 190);
-    text("Click on an ingredient once to add it to the plate, twice to remove it. Click on the plate to serve within 15 seconds. If they're satisfied by the food and by your time, they'll pay. Remember that it takes five seconds to cook a burger--any less and it'll come out raw and any more and it'll burn. Make 200$ to win!", 110, 156, 284, 190);
+    text("Click on an ingredient once to add it to the plate, twice to remove it. Click on the plate to serve within 15 seconds. If they're satisfied by the food and by your time, they'll pay. Remember to serve the burger when the timer turns green--any less and it'll come out raw and any more and it'll burn. Make 200$ to win!", 110, 156, 284, 190);
 }; 
 
 //ENDS SCREENS 
@@ -1132,7 +1132,16 @@ draw = function() {
                 drawMoney(currentMoney);
                 textSize(25);
                 fill(0, 0, 0);
-                text(currentMoney + "$",360,5);
+                var moneyX; //function to move money display as money increases
+                if(currentMoney < 10){
+                    moneyX = 365;
+                } else if(currentMoney < 100){
+                    moneyX = 350;
+                } else if(currentMoney >= 100){
+                    moneyX = 340;    
+                }
+                text(currentMoney + "$", moneyX, 5);
+
                 
                 //Timer of the hobs 
                 for (var n = 0; n < 4; n++){
