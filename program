@@ -718,8 +718,8 @@ button.prototype.handleMouseClick = function() {
 //START BUTTON; switches scene
 var btnStart = new button({
     x: 230,
-    y: 325,
-    color: (color(76, 72, 53)),
+    y: 290,
+    color: (color(156, 0, 2)),
     label: "START",
     onClick: function() {
         currentScene = 1;
@@ -988,7 +988,7 @@ var drawSplash = function(){
     textSize(14);
     fill(156, 0, 2);
     text("You're a frycook at a new fast food joint. A line of customers is at the doors and hungry.", 110, 115, 285, 190);
-    text("Click on an ingredient once to add it to the plate, twice to remove it. Click on the plate to serve. If they're satisfied by the food and by your time, they'll pay. Remember that it takes five seconds to cook a burger--any less and it'll come out raw and any more and it'll burn. Try to make as much money as possible!", 110, 156, 284, 190);
+    text("Click on an ingredient once to add it to the plate, twice to remove it. Click on the plate to serve within 15 seconds. If they're satisfied by the food and by your time, they'll pay. Remember that it takes five seconds to cook a burger--any less and it'll come out raw and any more and it'll burn. Make 200$ to win!", 110, 156, 284, 190);
 }; 
 
 //ENDS SCREENS 
@@ -1021,11 +1021,11 @@ var winScreen = function(){
     noStroke();
     textSize(30);
     fill(156, 0, 2);
-    text("END OF THE GAME !", 109, 30);
+    text("GAME END!", 109, 35);
     textSize(20);
-    text("YOU WON 200 $", 109, 80, 310, 120);
-    text("Number of fail: " + numberOfFail, 200, 170);
-    text("Time: " + endTime + " seconds", 200, 200);
+    text("You met your daily quota of 200$!", 109, 80, 280, 120);
+    text("You missed " + numberOfFail + " customers.", 109, 135, 310, 120);
+    text("Time: " + endTime + " seconds", 109, 165, 310, 120);
 }; 
 
 var lostScreen = function(){ 
@@ -1045,11 +1045,11 @@ var lostScreen = function(){
     noStroke();
     textSize(30);
     fill(156, 0, 2);
-    text("GAME OVER !", 130, 30);
+    text("GAME OVER!", 109, 35);
     textSize(20);
-    text("YOU LOST BECAUSE YOU DIDN'T MANAGE TO DO 200$ WITH ALL OF YOUR CLIENTS", 109, 80, 310, 120);
-    text("Number of fail: " + numberOfFail, 200, 170);
-    text("Time: " + endTime + " seconds", 200, 200);
+    text("You lost because you didn't reach your quota of 200$!", 109, 80, 280, 120);
+    text("You missed " + numberOfFail + " customers.", 109, 135, 310, 120);
+    text("Time: " + endTime + " seconds", 109, 165, 310, 120);
 }; 
 
 
@@ -1158,4 +1158,3 @@ draw = function() {
         }
     }
 };
-
