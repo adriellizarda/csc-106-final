@@ -1137,7 +1137,7 @@ draw = function() {
                     moneyX = 365;
                 } else if(currentMoney < 100){
                     moneyX = 350;
-                } else if(currentMoney > 100){
+                } else if(currentMoney >= 100){
                     moneyX = 340;    
                 }
                 text(currentMoney + "$", moneyX, 5);
@@ -1146,7 +1146,7 @@ draw = function() {
                 //Timer of the hobs 
                 for (var n = 0; n < 4; n++){
                     if( hobs[n].timer !== 0 ){
-                        if( round((millis()-hobs[n].timer)/1000) >= 5){
+                        if( round((millis()-hobs[n].timer)/1000) > 5){
                             hobs[n].CookingLevel = 2;
                         }
                          if( round((millis()-hobs[n].timer)/1000) >= 12){
