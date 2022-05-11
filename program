@@ -1094,6 +1094,7 @@ draw = function() {
                     posYDish -= 3;
                     posXDish -= 1;
                     if (posYDish < 100){
+                        //We reinitialise the currentCookedDish once we served the current client
                         currentCookedDish = [0,0,0,0,0];
                         dishReady = false;
                         posXDish = 290;
@@ -1102,7 +1103,7 @@ draw = function() {
                     }
                 }
                 
-                //Moving the Client when he is served
+                //Moving the Client when he is served or if he is not served in time
                 if(currentClient.served === true){
                     currentClient.x += clientSpeed*3;
                     currentClient.bubbleX = currentClient.x;
@@ -1112,6 +1113,7 @@ draw = function() {
                 }
                 
                 if(currentClient.x > 450){
+                    //once the client left we pass to the next client
                     c += 1;
                     //resets timer after current client passes
                     timeRunning = (round((millis() - startTime)/1000));
@@ -1122,7 +1124,7 @@ draw = function() {
                     }
                 }
                 
-                //Timer of the Client
+                //Printing of the timer of the Client
                 time = timeRunning - (round((millis() - startTime)/1000));
                 if(currentClient.x <= 200){
                     fill(0, 0, 0);
@@ -1161,11 +1163,11 @@ draw = function() {
                 if(currentMoney === 200){
                     StillPlaying = false;
                 }
-            }else{
+            }else{ //we served all the clients and we didn't make 200$
                 lostScreen();
             }
         }
-        else {
+        else { //we did 200$, we won
             winScreen();
         }
     }
